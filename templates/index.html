@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads Engine - Tactical Mode</title>
+    <style>
+        :root {
+            --primary: #D32F2F; 
+            --primary-hover: #B71C1C;
+            --secondary: #1A1A1A; 
+            --bg-color: #050505; 
+            --text-color: #F5F5F5; 
+            --text-muted: #666666;
+            --border-color: #333333;
+            --glow: 0 0 12px rgba(211, 47, 47, 0.6);
+        }
+        
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--secondary);
+            padding: 40px;
+            border-radius: 0px; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(211,47,47,0.3);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 0.9em;
+            letter-spacing: 2px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            background-color: #0A0A0A;
+            color: #00FF41;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        button {
+            padding: 15px 30px;
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid #FF5252;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 2px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            box-shadow: var(--glow);
+        }
+
+        .result-box { display: none; margin-top: 30px; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        
+        .card {
+            background: #0A0A0A;
+            padding: 20px;
+            border-left: 5px solid var(--primary);
+            border-right: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card h3 { margin-top: 0; font-size: 1em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
+        .metric { font-size: 1.8em; font-weight: bold; color: var(--primary); margin: 10px 0; }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            background-color: #000;
+            color: #00FF41; 
+            border: 1px solid var(--border-color);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        textarea:focus { outline: none; border-color: var(--primary); box-shadow: var(--glow); }
+
+        #loading {
+            display: none;
+            text-align: center;
+            color: var(--primary);
+            margin: 20px 0;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>[ Dropship Engine ]</h1>
+        <p class="subtitle">>> TACTICAL PRODUCT DISCOVERY & ADS GENERATOR <<</p>
+
+        <div class="input-group">
+            <input type="text" id="keyword" placeholder="Target operasi (contoh: Jersey Half Zipper World Cup 2026)...">
+            <button onclick="prosesData()">EXECUTE</button>
+        </div>
+
+        <div id="loading">>>> MENEMBUS DATABASE SISTEM... <<<</div>
+
+        <div class="result-box" id="resultBox">
+            <div class="grid-container">
+                <div class="card">
+                    <h3>⚡ DATA INTEL: SUPPLIER</h3>
+                    <div class="metric" id="resModal">Rp0</div>
+                    <p id="resProduk" style="font-weight: bold; margin-bottom: 5px; color: #FFF;">-</p>
+                    <p style="margin: 0; font-size: 0.9em; color: var(--text-muted);" id="resDetail">-</p>
+                </div>
+                <div class="card">
+                    <h3>🎯 PROYEKSI PROFIT (MARGIN 120-150k)</h3>
+                    <div class="metric" id="resJual">Rp0</div>
+                    <p style="text-decoration: line-through; color: var(--text-muted);" id="resCoret">Rp0</p>
+                    <p style="margin: 0; font-size: 0.9em; color: #00FF41;" id="resMargin">EST. CUAN: -</p>
+                </div>
+            </div>
+
+            <h3 style="color: var(--text-muted); text-transform: uppercase; margin-top: 30px; font-size: 1em;">[ HASIL EKSTRAKSI SCRIPT IKLAN ]</h3>
+            <textarea id="resCopywriting" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        async function prosesData() {
+            const keyword = document.getElementById('keyword').value;
+            if(!keyword) { alert("ERROR: TARGET KOSONG. MASUKKAN TARGET OPERASI!"); return; }
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('resultBox').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/proses-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keyword: keyword })
+                });
+
+                const data = await response.json();
+
+                if(data.status === "success") {
+                    document.getElementById('resProduk').innerText = data.supplier.nama_produk;
+                    document.getElementById('resModal').innerText = `Rp${data.supplier.harga_modal.toLocaleString('id-ID')}`;
+                    document.getElementById('resDetail').innerText = `LOKASI: ${data.supplier.lokasi} | TERJUAL: ${data.supplier.terjual}`;
+                    
+                    document.getElementById('resJual').innerText = `Rp${data.harga_jual.toLocaleString('id-ID')}`;
+                    document.getElementById('resCoret').innerText = `MSRP: Rp${data.harga_coret.toLocaleString('id-ID')}`;
+                    document.getElementById('resMargin').innerText = `EST. CUAN: Rp${data.margin_bersih.toLocaleString('id-ID')}`;
+                    
+                    document.getElementById('resCopywriting').value = data.copywriting;
+
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('resultBox').style.display = 'block';
+                }
+            } catch (error) {
+                alert("KONEKSI SERVER TERPUTUS.");
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
