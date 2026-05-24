@@ -9,10 +9,10 @@ app = Flask(__name__)
 # [ KONFIGURASI APIFY - KUNCI AKSES INTELIJEN ]
 # Masukkan API Token dari akun Apify kamu di sini untuk mengaktifkan "Live Mode"
 # ==============================================================================
-APIFY_TOKEN = "MASUKKAN_TOKEN_APIFY_KAMU_DISINI"
+APIFY_TOKEN = "apify_api_8PbDChp61bNU9JOJVnb4rWtBrwkmHi4buUun"
 
 # Nama Actor (Alat Scraper) di Apify. Pastikan kamu sudah menambahkan actor ini di akunmu.
-ACTOR_SHOPEE = "dtruss/shopee-scraper" # Contoh ID Actor Shopee di Apify
+ACTOR_SHOPEE = "xtracto/shopee-scraper" # Contoh ID Actor Shopee di Apify
 
 @app.route('/')
 def home():
@@ -31,7 +31,7 @@ def proses_data():
     # ==========================================================================
     try:
         # Cek apakah pengguna sudah memasukkan token Apify asli
-        if APIFY_TOKEN != "MASUKKAN_TOKEN_APIFY_KAMU_DISINI":
+        if APIFY_TOKEN != "apify_api_8PbDChp61bNU9JOJVnb4rWtBrwkmHi4buUun":
             print(f">>> [SISTEM] Menembus database Shopee untuk target: {keyword}...")
             
             # Request ke API Apify khusus Shopee Scraper
